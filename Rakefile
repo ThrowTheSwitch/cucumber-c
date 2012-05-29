@@ -2,11 +2,12 @@ require 'rubygems'
 require 'rake'
 require 'cucumber'
 require 'cucumber/rake/task'
+require 'ceedling'
 
 PROJECT_CEEDLING_ROOT = "vendor/ceedling"
 load "#{PROJECT_CEEDLING_ROOT}/lib/rakefile.rb"
 
-task :default => %w[ test:all ]
+task :default => %w[ test:all features:finished ]
 
 class BuildFailure < Exception
   def initialize(message = nil)
@@ -22,7 +23,8 @@ end
 namespace :features do
   desc "Run finished features"
   Cucumber::Rake::Task.new(:finished) do |t|
-    t.cucumber_opts = "--format progress --tags ~in-progress"
+    t.cucumber_opts = "--format progress test/features"
+    t.libs = $LOAD_PATH
     # t.pattern = 'test/features/*.features'
   end
 

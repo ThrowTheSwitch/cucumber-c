@@ -1,163 +1,73 @@
 --- 
-:release_compiler: 
-  :arguments: []
-
-:extension: 
-  :executable: .out
-  :header: .h
-  :testpass: .pass
-  :assembly: .s
-  :object: .o
-  :testfail: .fail
-  :source: .c
-  :list: .lst
-  :dependencies: .d
-  :map: .map
-:test_linker: 
-  :arguments: []
-
-:cmock: 
-  :verbosity: 3
-  :when_no_prototypes: :warn
-  :plugins: 
-  - :ignore
-  :mock_prefix: Mock
-  :mock_path: build/test/mocks
-  :unity_helper: false
-  :defines: []
-
-  :treat_as: 
-    int8: INT8
-    uint32: UINT32
-    uint16: HEX16
-    uint8: HEX8
-    bool: UINT8
-  :enforce_strict_ordering: true
-:release_assembler: 
-  :arguments: []
-
-:module_generator: 
-  :test_root: test/
-  :project_root: ./
-  :source_root: src/
-:plugins: 
-  :load_paths: 
-  - vendor/ceedling/plugins
-  :display_raw_test_results: false
-  :stdout_ide_tests_report_path: vendor/ceedling/plugins/stdout_ide_tests_report/lib
-  :module_generator_path: vendor/ceedling/plugins/module_generator/lib
-  :enabled: 
-  - stdout_ide_tests_report
-  - module_generator
-:test_fixture: 
-  :arguments: []
-
-  :link_objects: []
-
-:cexception: 
-  :defines: []
-
-:unity: 
-  :defines: []
-
-:environment: 
-- :rake_columns: "120"
-:release_linker: 
-  :arguments: []
-
-:flags: {}
-
-:test_includes_preprocessor: 
-  :arguments: []
-
-:files: 
-  :test: []
-
-  :include: []
-
-  :assembly: []
-
-  :source: []
-
-  :support: []
-
-:release_build: 
-  :artifacts: []
-
-  :use_assembly: false
-:release_dependencies_generator: 
-  :arguments: []
-
-:project: 
-  :use_deep_dependencies: false
-  :use_mocks: true
-  :build_root: build
-  :test_file_prefix: test_
-  :release_build: false
-  :use_auxiliary_dependencies: true
-  :use_exceptions: false
-  :options_paths: []
-
-  :use_test_preprocessor: true
 :test_file_preprocessor: 
   :arguments: []
-
-:defines: 
-  :test: 
-  - &id001 []
-
-  - TEST
-  :release_preprocess: []
-
-  :commmon: []
-
-  :release: []
-
-  :test_preprocess: 
-  - *id001
-  - TEST
-:paths: 
-  :test: 
-  - +:test/unit/**
-  - -:test/unit/support
-  :include: []
-
-  :release_toolchain_include: []
-
-  :source: 
-  - src/**
-  :support: 
-  - test/unit/support
-  :test_toolchain_include: []
 
 :test_dependencies_generator: 
   :arguments: []
 
+:plugins: 
+  :module_generator_path: vendor/ceedling/plugins/module_generator/lib
+  :enabled: 
+  - stdout_ide_tests_report
+  - module_generator
+  :load_paths: 
+  - vendor/ceedling/plugins
+  :display_raw_test_results: false
+  :stdout_ide_tests_report_path: vendor/ceedling/plugins/stdout_ide_tests_report/lib
 :test_compiler: 
   :arguments: []
 
 :tools: 
+  :test_file_preprocessor: 
+    :executable: gcc
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+    :name: default_test_file_preprocessor
+    :arguments: 
+    - -E
+    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+    - -D$: DEFINES_TEST_PREPROCESS
+    - -DGNU_PREPROCESSOR
+    - "\"${1}\""
+    - -o "${2}"
+  :test_compiler: 
+    :executable: gcc
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+    :name: default_test_compiler
+    :arguments: 
+    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+    - -DGNU_COMPILER
+    - -c "${1}"
+    - -o "${2}"
   :test_linker: 
     :executable: gcc
-    :optional: false
     :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
     :name: default_test_linker
     :arguments: 
     - "\"${1}\""
     - -o "${2}"
-    :background_exec: :none
   :test_fixture: 
     :executable: ${1}
-    :optional: false
     :stderr_redirect: :auto
+    :background_exec: :none
+    :optional: false
     :name: default_test_fixture
     :arguments: []
 
-    :background_exec: :none
   :test_includes_preprocessor: 
     :executable: cpp
-    :optional: false
     :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
     :name: default_test_includes_preprocessor
     :arguments: 
     - -MM
@@ -169,36 +79,126 @@
     - -w
     - -nostdinc
     - "\"${1}\""
-    :background_exec: :none
-  :test_file_preprocessor: 
-    :executable: gcc
-    :optional: false
-    :stderr_redirect: :none
-    :name: default_test_file_preprocessor
-    :arguments: 
-    - -E
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-    - -D$: DEFINES_TEST_PREPROCESS
-    - -DGNU_PREPROCESSOR
-    - "\"${1}\""
-    - -o "${2}"
-    :background_exec: :none
-  :test_compiler: 
-    :executable: gcc
-    :optional: false
-    :stderr_redirect: :none
-    :name: default_test_compiler
-    :arguments: 
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-    - -DGNU_COMPILER
-    - -c "${1}"
-    - -o "${2}"
-    :background_exec: :none
 :test_runner: 
+  :file_suffix: _runner
   :includes: []
 
-  :file_suffix: _runner
+:environment: 
+- :rake_columns: "120"
+:release_compiler: 
+  :arguments: []
+
+:cexception: 
+  :defines: []
+
+:unity: 
+  :defines: []
+
+:flags: {}
+
+:test_linker: 
+  :arguments: []
+
+:files: 
+  :test: []
+
+  :include: []
+
+  :source: []
+
+  :assembly: []
+
+  :support: []
+
+:release_assembler: 
+  :arguments: []
+
+:extension: 
+  :executable: .out
+  :object: .o
+  :testpass: .pass
+  :source: .c
+  :assembly: .s
+  :header: .h
+  :list: .lst
+  :testfail: .fail
+  :dependencies: .d
+  :map: .map
+:test_fixture: 
+  :arguments: []
+
+  :link_objects: []
+
+:release_linker: 
+  :arguments: []
+
+:paths: 
+  :test: 
+  - +:test/unit/**
+  - -:test/unit/support
+  :include: []
+
+  :test_toolchain_include: []
+
+  :release_toolchain_include: []
+
+  :source: 
+  - src/**
+  :support: 
+  - test/unit/support
+:module_generator: 
+  :project_root: ./
+  :source_root: src/
+  :test_root: test/
+:test_includes_preprocessor: 
+  :arguments: []
+
+:defines: 
+  :test: 
+  - &id001 []
+
+  - TEST
+  :test_preprocess: 
+  - *id001
+  - TEST
+  :release_preprocess: []
+
+  :commmon: []
+
+  :release: []
+
+:release_build: 
+  :use_assembly: false
+  :artifacts: []
+
+:release_dependencies_generator: 
+  :arguments: []
+
+:cmock: 
+  :enforce_strict_ordering: true
+  :plugins: 
+  - :ignore
+  :unity_helper: false
+  :treat_as: 
+    int8: INT8
+    uint32: UINT32
+    uint16: HEX16
+    uint8: HEX8
+    bool: UINT8
+  :mock_path: build/test/mocks
+  :mock_prefix: Mock
+  :defines: []
+
+  :verbosity: 3
+  :when_no_prototypes: :warn
+:project: 
+  :use_auxiliary_dependencies: true
+  :use_test_preprocessor: true
+  :use_mocks: true
+  :use_deep_dependencies: false
+  :test_file_prefix: test_
+  :build_root: build
+  :options_paths: []
+
+  :release_build: false
+  :use_exceptions: false

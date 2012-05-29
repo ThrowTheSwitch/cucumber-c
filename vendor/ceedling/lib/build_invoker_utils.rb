@@ -1,6 +1,5 @@
 require 'constants'
 
-
 class BuildInvokerUtils
 
   constructor :configurator, :streaminator
